@@ -1,10 +1,24 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
+import coffeeStoresData from '../data/coffee-stores.json'
+
+import { fetchCoffeeStores } from '../lib/coffee-stores'
+
 import Banner from '../components/banner'
+import Image from 'next/image'
+import Card from '../components/card'
 
-export default function Home() {
+export async function getStaticProps(context) {
+  const coffeeStores = await fetchCoffeeStores()
+  return {
+    props: {
+      coffeeStores
+    }
+  }
+}
 
+export default function Home(props) {
   const handleBannerBtnClick = () => {
     console.log('hi banner button')
   }
@@ -19,6 +33,27 @@ export default function Home() {
 
       <main className={styles.main}>
         <Banner buttonText='View stores nearby' handleOnClick={handleBannerBtnClick} />
+        <div className={styles.heroImage}>
+          <Image src='/static/hero-image.png' alt='hero-image' width={700} height={400}/>
+        </div>
+        {props.coffeeStores.length ? (
+          <>
+            <h2 className={styles.heading2}>Hanover stores</h2>
+            <div className={styles.cardLayout} >
+              {props.coffeeStores.map((coffeeStore) => (
+                <Card
+                  key={coffeeStore.fsq_id}
+                  className={styles.card}
+                  name={coffeeStore.name}
+                  imgUrl={coffeeStore.imgUrl}
+                  href={`coffee-store/${coffeeStore.fsq_id}`}
+                />
+              ))}
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
       </main>
     </div>
   )
