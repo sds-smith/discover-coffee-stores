@@ -8,7 +8,7 @@ body {
   background-position: 50%;
   background-repeat: no-repeat;
   background-size: cover;
-  color: #373b64;
+  color: var(--text-coffee);
 }
 
 @font-face {
@@ -94,8 +94,9 @@ button:focus {
 }
 
 :root {
-  --text-purple: rgba(67, 56, 202, 1);
+  --text-purple: rgb(155, 119, 171);
   --text-purple-dark: rgba(79, 70, 229,1);
+  --text-coffee: rgba(89, 34, 3, 1);
   --text-black: rgba(17, 24, 39, 1);
   --text-white-100: rgba(229, 231, 235, 1);
 }

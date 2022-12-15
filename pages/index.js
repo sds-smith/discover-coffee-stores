@@ -34,7 +34,7 @@ export default function Home(props) {
       <main className={styles.main}>
         <Banner buttonText='View stores nearby' handleOnClick={handleBannerBtnClick} />
         <div className={styles.heroImage}>
-          <Image src='/static/hero-image.png' alt='hero-image' width={700} height={400}/>
+          <Image src='/static/coffee-hero-image.png' alt='hero-image' width={400} height={400}/>
         </div>
         {props.coffeeStores.length ? (
           <>
