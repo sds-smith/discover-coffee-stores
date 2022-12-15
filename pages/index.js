@@ -1,9 +1,10 @@
+import { useState, useEffect, useContext } from 'react'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
-import coffeeStoresData from '../data/coffee-stores.json'
-
 import { fetchCoffeeStores } from '../lib/coffee-stores'
+import useTrackLocation from '../hooks/use-track-location'
+import { ACTION_TYPES, StoreContext } from '../context/store-context'
 
 import Banner from '../components/banner'
 import Image from 'next/image'
@@ -19,9 +20,39 @@ export async function getStaticProps(context) {
 }
 
 export default function Home(props) {
+  const {handleTrackLocation, locationErrorMsg, isFindingLocation} = useTrackLocation()
+
+  // const [coffeeStores, setCoffeeStores] = useState('')
+  const [coffeeStoresError, setCoffeeStoresError] = useState('')
+
+  const {dispatch, state} = useContext(StoreContext)
+  const {coffeeStores, latLong} = state
+
   const handleBannerBtnClick = () => {
     console.log('hi banner button')
+    handleTrackLocation()
   }
+
+  useEffect(() => {
+    const getCoffeeStores = async () => {
+      if (latLong) {
+        try {
+          const fetchedCoffeeStores = await fetchCoffeeStores(latLong, 30)
+          // setCoffeeStores(fetchedCoffeeStores)
+          dispatch({
+            type: ACTION_TYPES.SET_COFFEE_STORES,
+            payload: {
+              coffeeStores: fetchedCoffeeStores
+            }
+          })
+          console.log({fetchedCoffeeStores})
+        } catch (err) {
+          setCoffeeStoresError(err.message)
+        }
+      }
+    }
+    getCoffeeStores()
+  }, [dispatch, latLong])
 
   return (
     <div className={styles.container}>
@@ -32,25 +63,46 @@ export default function Home(props) {
       </Head>
 
       <main className={styles.main}>
-        <Banner buttonText='View stores nearby' handleOnClick={handleBannerBtnClick} />
+        <Banner buttonText={isFindingLocation ? 'Locating...' : 'View stores nearby'} handleOnClick={handleBannerBtnClick} />
+        {locationErrorMsg ? <p>Something went wrong: {locationErrorMsg}</p> : <p></p>}
+        {coffeeStoresError ? <p>Something went wrong: {coffeeStoresError}</p> : <p></p>}
         <div className={styles.heroImage}>
           <Image src='/static/coffee-hero-image.png' alt='hero-image' width={400} height={400}/>
         </div>
+        
+        {coffeeStores.length ? (
+          <div className={styles.sectionWrapper}>
+            <h2 className={styles.heading2}>Stores near me</h2>
+            <div className={styles.cardLayout} >
+              {coffeeStores.map((coffeeStore) => (
+                <Card
+                  key={coffeeStore.id}
+                  className={styles.card}
+                  name={coffeeStore.name}
+                  imgUrl={coffeeStore.imgUrl}
+                  href={`coffee-store/${coffeeStore.id}`}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}        
         {props.coffeeStores.length ? (
-          <>
+          <div className={styles.sectionWrapper}>
             <h2 className={styles.heading2}>Hanover stores</h2>
             <div className={styles.cardLayout} >
               {props.coffeeStores.map((coffeeStore) => (
                 <Card
-                  key={coffeeStore.fsq_id}
+                  key={coffeeStore.id}
                   className={styles.card}
                   name={coffeeStore.name}
                   imgUrl={coffeeStore.imgUrl}
-                  href={`coffee-store/${coffeeStore.fsq_id}`}
+                  href={`coffee-store/${coffeeStore.id}`}
                 />
               ))}
             </div>
-          </>
+          </div>
         ) : (
           <></>
         )}
