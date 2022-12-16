@@ -35,7 +35,7 @@ export async function getStaticPaths() {
 }
 
 const CoffeeStore = (initialProps) => {
-    const [coffeeStore, setCoffeeStore] = useState({})
+    const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore || {})
     const [votingCount, setVotingCount] = useState(0)
 
     const { name, imgUrl, neighborhood, address } = coffeeStore
@@ -119,6 +119,10 @@ const CoffeeStore = (initialProps) => {
             setVotingCount(voting)
         }
     }, [data])
+
+    if (error) {
+        return <div>Something went wrong retrieving coffee store page</div>
+    }
 
     return (
         <>

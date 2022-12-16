@@ -21,17 +21,16 @@ const upvoteCoffeeStoreById = async (req, res) => {
                         }
                     ])
                     if (updateRecord) {
-                        res.json(updateRecord)
+                        return res.json(updateRecord)
                     }
                 } else {
-                    res.json({message: "Coffee store iid does not exist", id})
+                    return res.json({message: "Coffee store iid does not exist", id})
                 }
             } else {
-                res.status(400).json({message: "Missing required store id."})
+                return res.status(400).json({message: "Missing required store id."})
             }
-            res.json({message: "IT'S WORKING", id})
         } catch (err) {
-            res.status(500).json({message: "Error upvoting coffee store", err})
+            return res.status(500).json({message: "Error upvoting coffee store", err})
         }
     }
 }
