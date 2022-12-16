@@ -1,4 +1,5 @@
-import { table, mapRecords } from '../../lib/airtable'
+import { table } from '../../lib/airtable'
+import { findCoffeeStoreRecords } from '../../utils/index.utils';
 
 const createCoffeeStore = async (req, res) => {
 
@@ -7,15 +8,10 @@ const createCoffeeStore = async (req, res) => {
 
         try {
             if (id) {
-                const findCoffeeStoreRecords = await table
-                .select({
-                    filterByFormula: `id="${id}"`,
-                })
-                .firstPage();
+                const coffeeStoreRecords = await findCoffeeStoreRecords(id)
             
-                if (findCoffeeStoreRecords.length) {
-                    const records = mapRecords(findCoffeeStoreRecords)
-                    res.json(records);
+                if (coffeeStoreRecords.length) {
+                    res.json(coffeeStoreRecords);
                 } else {
                     //create a record
                     if (name) {
@@ -31,8 +27,7 @@ const createCoffeeStore = async (req, res) => {
                                 }
                             }
                         ])
-                        const records = mapRecords(createRecords)
-                        res.json({records})
+                        res.json({createRecords})
                     } else {
                         res.status(400).json({message: 'Missing required store name'})
                     }

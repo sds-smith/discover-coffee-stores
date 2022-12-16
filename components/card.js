@@ -12,7 +12,7 @@ const Card = ({href, name, imgUrl}) => {
                     <h2 className={cardHeader}>{name}</h2>
                 </div>
                 <div className={cardImageWrapper} >
-                    <Image className={cardImage} src={imgUrl} width={260} height={160} alt={name}/>
+                    <Image className={cardImage} src={imgUrl} width={260} height={160} alt={name || 'coffee store card'}/>
                 </div>
             </div>
 
