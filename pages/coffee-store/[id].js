@@ -65,7 +65,6 @@ const CoffeeStore = (initialProps) => {
                 })
             })
             const dbCoffeeStore = await response.json();
-            console.log({dbCoffeeStore})
         } catch (err) {
             console.error('Error creating coffee store', err)
         }
@@ -86,9 +85,8 @@ const CoffeeStore = (initialProps) => {
         }
     }, [coffeeStore, coffeeStores, id, initialProps.coffeeStore])
 
-    const {name, imgUrl, location} = coffeeStore
-    const {neighborhood, locality, formatted_address} = location ? location : {undefined, undefined, undefined}
-    const address = formatted_address
+    const { name, imgUrl, neighborhood, address } = coffeeStore
+
 
     return (
         <>
@@ -98,7 +96,7 @@ const CoffeeStore = (initialProps) => {
         ) : (
             <div>
                 <Head>
-                    <title>{name}</title>
+                    <title>Coffee Explorer: {name}</title>
                 </Head>
                 <div className={styles.container}>
                     <div className={styles.col1}>
@@ -121,7 +119,7 @@ const CoffeeStore = (initialProps) => {
                         </div>
                         <div className={styles.iconWrapper}>
                             <Image src='/static/icons/near-me.svg' width='24' height='24' alt=''/>
-                            <p className={styles.text}>{neighborhood ? neighborhood[0] : locality}</p>
+                            <p className={styles.text}>{neighborhood}</p>
                         </div>
                         <div className={styles.iconWrapper}>
                             <Image src='/static/icons/star.svg' width='24' height='24' alt=''/>
