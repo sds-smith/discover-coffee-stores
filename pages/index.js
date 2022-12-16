@@ -29,7 +29,6 @@ export default function Home(props) {
   const {coffeeStores, latLong} = state
 
   const handleBannerBtnClick = () => {
-    console.log('hi banner button')
     handleTrackLocation()
   }
 
